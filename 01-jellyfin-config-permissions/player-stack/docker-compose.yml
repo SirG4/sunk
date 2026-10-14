@@ -1,0 +1,14 @@
+name: evt01-jellyfin
+
+services:
+  jellyfin:
+    image: evt01-jellyfin:1
+    pull_policy: never
+    user: "1000:1000"
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8101:8096"
+    volumes:
+      - ./config:/config
+      - ./cache:/cache
+      - ./media:/media:ro
