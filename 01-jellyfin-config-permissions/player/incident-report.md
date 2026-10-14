@@ -5,7 +5,7 @@
 **Status:** Open
 
 ## Summary
-Jellyfin stopped responding after a maintenance window. The web page at the local service address does not load, and restarting the stack has not restored access.
+Jellyfin stopped responding after the service data was restored from a host backup during scheduled maintenance. The web page at the local service address does not load, and restarting the stack has not restored access. The startup error refers to a database file under Jellyfin's persistent configuration storage.
 
 ## Environment
 - Host: lab PC, Docker + Docker Compose
@@ -13,9 +13,10 @@ Jellyfin stopped responding after a maintenance window. The web page at the loca
 - Service URL (when healthy): http://localhost:8101
 
 ## What was observed
-- The service was available earlier, then became unreachable after a host maintenance task.
+- The service was available before the backup restore and became unreachable immediately afterward.
 - The container repeatedly exits and restarts.
-- `docker compose ps` does not show Jellyfin staying up.
+- The startup log reports that SQLite cannot write to its database under `/config`.
+- The compose file maps a host directory to `/config`; inspect the mounted directory and the service's ability to use its persistent files.
 
 ## Your task
-Restore the service to a fully working state using the provided stack. From the stack directory, inspect it with `docker compose logs` and start or restart it with `docker compose up -d`. When you believe it is fixed, call a volunteer to verify.
+Restore the service to a fully working state using the provided stack. From the stack directory, use `docker compose ps` and `docker compose logs jellyfin` to investigate. You can stop the stack with `docker compose down` and start it with `docker compose up -d`. When you believe it is fixed, call a volunteer to verify.

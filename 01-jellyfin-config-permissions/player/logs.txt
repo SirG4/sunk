@@ -1,10 +1,4 @@
-2026-10-14T15:54:00.000Z [INF] Jellyfin.Server.Startup: Storage path `/config` (Fixed) successfully checked with 105.6GiB free which is over the minimum of 2GiB.
-2026-10-14T15:54:00.000Z [INF] Emby.Server.Implementations.AppBase.BaseConfigurationManager: Setting cache path: /cache
-2026-10-14T15:54:01.000Z [INF] Jellyfin.Database.Providers.Sqlite.SqliteDatabaseProvider: SQLite connection string: Data Source=/config/data/jellyfin.db;Cache=Default;Default Timeout=30;Pooling=True
-2026-10-14T15:54:01.000Z [INF] Jellyfin.Database.Implementations.Locking.NoLockBehavior: The database locking mode has been set to: NoLock.
-2026-10-14T15:54:01.000Z [WRN] Microsoft.Extensions.Diagnostics.HealthChecks.DefaultHealthCheckService: Health check StartupCheck with status Degraded completed with message 'Server is still starting up.'
-2026-10-14T15:54:01.000Z [INF] Jellyfin.Server.Migrations.JellyfinMigrationService: Initialise Migration service.
-2026-10-14T15:54:10.000Z [ERR] Microsoft.EntityFrameworkCore.Database.Command: Failed executing DbCommand (19ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+2026-10-14T15:54:10.000Z [ERR] Microsoft.EntityFrameworkCore.Database.Command: Failed executing DbCommand (19ms) [CommandType='Text', CommandTimeout='30']
 SELECT COUNT(*) FROM "sqlite_master" WHERE "name" = '__EFMigrationsHistory' AND "type" = 'table';
 2026-10-14T15:54:10.000Z [FTL] Main: Unhandled Exception
 Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 8: 'attempt to write a readonly database'.
@@ -20,5 +14,3 @@ Microsoft.Data.Sqlite.SqliteException (0x80004005): SQLite Error 8: 'attempt to 
    at Jellyfin.Server.Migrations.JellyfinMigrationService.MigrateStepAsync(JellyfinMigrationStageTypes stage, IServiceProvider serviceProvider)
    at Jellyfin.Server.Program.ApplyStartupMigrationAsync(ServerApplicationPaths appPaths, IConfiguration startupConfig)
    at Jellyfin.Server.Program.StartApp(StartupOptions options)
-   at Jellyfin.Server.Program.<Main>(String[] args)
-2026-10-14T15:54:10.000Z [FTL] Main: Unhandled exception: SQLite Error 8: 'attempt to write a readonly database'.
