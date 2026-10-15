@@ -1,0 +1,18 @@
+# Captured from the actual broken runtime. Apache output is from docker compose logs;
+# application records are from /var/www/html/data/nextcloud.log.
+2026-10-14T20:41:37.904976562Z Initializing nextcloud 31.0.9.1 ...
+2026-10-14T20:41:54.900619929Z New nextcloud instance
+2026-10-14T20:41:55.057463069Z Installing with MySQL database
+2026-10-14T20:41:55.057559125Z => Searching for hook scripts (*.sh) to run, located in the folder "/docker-entrypoint-hooks.d/pre-installation"
+2026-10-14T20:41:55.069833541Z ==> Skipped: the "pre-installation" folder is empty (or does not exist)
+2026-10-14T20:42:48.731668898Z Nextcloud was successfully installed
+2026-10-14T20:42:48.779656008Z Setting trusted domains…
+2026-10-14T20:42:50.852931874Z System config value trusted_domains => 1 set to string localhost
+2026-10-14T20:42:53.102335627Z System config value trusted_domains => 2 set to string 127.0.0.1
+2026-10-14T20:42:53.765962033Z [Wed Oct 14 20:42:53.765496 2026] [mpm_prefork:notice] [pid 1:tid 1] AH00163: Apache/2.4.65 (Debian) PHP/8.3.26 configured -- resuming normal operations
+2026-10-14T20:42:56.794010779Z 172.21.0.1 - - [14/Oct/2026:20:42:54 +0000] "GET /status.php HTTP/1.1" 200 1067 "-" "curl/8.22.0"
+2026-10-14T20:43:42.254388025Z 172.21.0.1 - evt-reader [14/Oct/2026:20:43:21 +0000] "PUT /remote.php/dav/files/evt-reader/canary.txt HTTP/1.1" 201 1577 "-" "curl/8.22.0"
+2026-10-14T20:45:11.890902669Z [Wed Oct 14 20:45:11.890223 2026] [mpm_prefork:notice] [pid 1:tid 1] AH00163: Apache/2.4.65 (Debian) PHP/8.3.26 configured -- resuming normal operations
+2026-10-14T20:45:29.288424867Z 172.21.0.1 - - [14/Oct/2026:20:45:28 +0000] "GET / HTTP/1.1" 500 702 "-" "curl/8.22.0"
+{"reqId":"Iid5k3b2A352Jc6bEoSt","level":3,"time":"2026-10-14T20:45:29+00:00","remoteAddr":"172.21.0.1","app":"index","method":"GET","url":"/","message":"Failed to connect to the database: An exception occurred in the driver: SQLSTATE[HY000] [1045] Access denied for user 'nextcloud'@'172.21.0.3' (using password: YES)"}
+{"reqId":"Iid5k3b2A352Jc6bEoSt","level":3,"time":"2026-10-14T20:45:29+00:00","remoteAddr":"172.21.0.1","app":"core","method":"GET","url":"/","message":"Failed to connect to the database: An exception occurred in the driver: SQLSTATE[HY000] [1045] Access denied for user 'nextcloud'@'172.21.0.3' (using password: YES)"}

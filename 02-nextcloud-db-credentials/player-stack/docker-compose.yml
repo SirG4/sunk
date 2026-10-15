@@ -1,0 +1,39 @@
+name: evt02-nextcloud
+
+services:
+  db:
+    image: mariadb:11.4.5
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    environment:
+      MARIADB_ROOT_PASSWORD: NextcloudRoot-Event-Only!
+      MARIADB_DATABASE: nextcloud
+      MARIADB_USER: nextcloud
+      MARIADB_PASSWORD: NextcloudDb-2026!
+    volumes:
+      - ./db:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mariadb-admin ping -h 127.0.0.1 -u root -p\"$${MARIADB_ROOT_PASSWORD}\" --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  nextcloud:
+    image: evt02-nextcloud:1
+    pull_policy: never
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8102:80"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: NextcloudDb-2026!
+      NEXTCLOUD_ADMIN_USER: evt-bootstrap
+      NEXTCLOUD_ADMIN_PASSWORD: Bootstrap-2026-Temporary
+      NEXTCLOUD_TRUSTED_DOMAINS: localhost 127.0.0.1
+    volumes:
+      - ./nextcloud:/var/www/html
