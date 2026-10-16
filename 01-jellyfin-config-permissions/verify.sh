@@ -45,6 +45,20 @@ fi
 compose=(docker compose -p "$PROJECT" -f "$COMPOSE_FILE")
 cid="$("${compose[@]}" ps -q jellyfin 2>/dev/null || true)"
 
+wait_for_api() {
+  local attempts="${1:-90}"
+  for _ in $(seq 1 "$attempts"); do
+    if curl -fsS --max-time 2 "$URL/System/Info/Public" >/dev/null 2>&1; then
+      return 0
+    fi
+    sleep 1
+  done
+  return 1
+}
+
+api_ready=0
+wait_for_api 10 && api_ready=1
+
 record() {
   if [[ "$1" == pass ]]; then
     printf '[PASS] %s\n' "$2"
@@ -64,7 +78,7 @@ else
   record fail 'event image signature could not be checked'
 fi
 
-if curl -fsS --max-time 3 "$URL/System/Info/Public" >/dev/null 2>&1; then
+if (( api_ready == 1 )); then
   record pass 'Jellyfin responds on 127.0.0.1:8101'
 else
   record fail 'Jellyfin is not responding on 127.0.0.1:8101'
@@ -112,17 +126,7 @@ check_canaries() {
   return 1
 }
 
-wait_for_api() {
-  for _ in $(seq 1 90); do
-    if curl -fsS --max-time 2 "$URL/System/Info/Public" >/dev/null 2>&1; then
-      return 0
-    fi
-    sleep 1
-  done
-  return 1
-}
-
-if curl -fsS --max-time 3 "$URL/System/Info/Public" >/dev/null 2>&1 && check_canaries; then
+if (( api_ready == 1 )) && check_canaries; then
   record pass 'evt-admin login succeeds and EVENT-CANARY is present'
 else
   record fail 'admin login or EVENT-CANARY library check failed'
@@ -135,7 +139,7 @@ else
   record fail 'seed media files are missing'
 fi
 
-if [[ -n "$cid" ]] && curl -fsS --max-time 3 "$URL/System/Info/Public" >/dev/null 2>&1 \
+if [[ -n "$cid" ]] && (( api_ready == 1 )) \
   && docker exec "$cid" sh -c 'test -w /config && test -w /config/data' >/dev/null 2>&1; then
   if "${compose[@]}" restart jellyfin >/dev/null && wait_for_api; then
     record pass 'service survives a container restart'
